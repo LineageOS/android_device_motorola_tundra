@@ -64,6 +64,9 @@ PRODUCT_COPY_FILES += \
 # LiveDisplay
 $(call soong_config_set_bool,livedisplay_sysfs,enable_af,true)
 
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/display_id_4630947043778501762.xml:$(TARGET_COPY_OUT_VENDOR)/etc/displayconfig/display_id_4630947043778501762.xml
+
 # NFC
 PRODUCT_PACKAGES += \
     android.hardware.nfc-service.nxp \
