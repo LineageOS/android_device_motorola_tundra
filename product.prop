@@ -8,3 +8,6 @@ ro.mot.build.customerid=global
 
 # Radio
 ro.vendor.radio.imei.sv=25
+
+# SKU specific properties
+import /product/etc/hardware.sku.${ro.boot.hardware.sku}.prop
