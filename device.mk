@@ -44,7 +44,7 @@ PRODUCT_COPY_FILES += \
 
 # Fingerprint
 PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint@2.3-service.tundra
+    android.hardware.biometrics.fingerprint@2.3-service.moto
 
 # GMS
 ifeq ($(WITH_GMS),true)
