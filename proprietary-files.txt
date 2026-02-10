@@ -290,6 +290,19 @@ product/priv-app/HotwordEnrollmentXGoogleHEXAGON_WIDEBAND/HotwordEnrollmentXGoog
 system_ext/etc/permissions/com.android.hotwordenrollment.common.util.xml
 system_ext/framework/com.android.hotwordenrollment.common.util.jar
 
+# MotCamera4 - from tundra -
+product/app/MotCamera3AI/MotCamera3AI.apk;PRESIGNED|d4eaca83db14aca9ffff7691cff062e1dd0ed002
+product/etc/init/init.motcamera3.lens.rc|293260214b3b60496fb61709276295f17036f506
+product/priv-app/MotCamera4/MotCamera4.apk|5cd349184b9fe51ea5d3914e4f24ba85c869311f
+
+# MotCamera4 - Permissions - from tundra -
+product/etc/permissions/com.motorola.camera3.content.ai.xml|261f857c62c97286f492b3f5c69ff11226a06af0
+product/etc/permissions/com.motorola.camera3.lens.xml|7dfafac8d89447a1e0bc93fd5cea5ca6e5c20bee
+product/etc/permissions/com.motorola.camera3.xml|0d383cbc8f265d80e4f08c9bb9ecefe321a29a7d
+product/etc/permissions/deviceowner-configuration-com.motorola.camera3.xml|190b3ce907c094a030c515895e21c6afcecbafc4
+product/etc/permissions/privapp-permissions-com.motorola.camera3.xml|b759bdaf7baca0dcc8ee5e1d1faf51c78d43c4a1
+product/etc/sysconfig/hiddenapi-whitelist-com.motorola.camera3.xml|d99de1fb201aa63d9d543a41104013989fc84dc9
+
 # NFC
 vendor/etc/libnfc-nci.conf
 vendor/etc/libnfc-nxp-pnscr.conf:vendor/etc/libnfc-nxp.conf
