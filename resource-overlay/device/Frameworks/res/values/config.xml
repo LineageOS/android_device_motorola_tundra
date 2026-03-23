@@ -4,6 +4,43 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
+    <!-- Indicate available ColorDisplayManager.COLOR_MODE_xxx. -->
+    <integer-array name="config_availableColorModes">
+        <item>0</item> <!-- COLOR_MODE_NATURAL -->     <!-- This uses colorimetric render intents-->
+        <item>1</item> <!-- COLOR_MODE_BOOSTED -->     <!-- This applies a 10% boost using the PCC-->
+        <item>2</item> <!-- COLOR_MODE_SATURATED -->
+        <item>3</item> <!-- COLOR_MODE_AUTOMATIC -->   <!-- This uses enhanced render intents-->
+    </integer-array>
+
+    <!-- Color mode to use when accessibility transforms are enabled. This color mode must be
+         supported by the device, but not necessarily appear in config_availableColorModes. The
+         regularly selected color mode will be used if this value is negative. -->
+    <integer name="config_accessibilityColorMode">2</integer>
+
+    <!-- The following two arrays specify which color space to use for display composition when a
+         certain color mode is active.
+         Composition color spaces are defined in android.view.Display.COLOR_MODE_xxx, and color
+         modes are defined in ColorDisplayManager.COLOR_MODE_xxx and
+         ColorDisplayManager.VENDOR_COLOR_MODE_xxx.
+         The color space COLOR_MODE_DEFAULT (0) lets the system select the most appropriate
+         composition color space for currently displayed content. Other values (e.g.,
+         COLOR_MODE_SRGB) override system selection; these other color spaces must be supported by
+         the device for for display composition.
+         If a color mode does not have a corresponding color space specified in this array, the
+         currently set composition color space will not be modified.-->
+    <integer-array name="config_displayCompositionColorModes">
+        <item>0</item> <!-- COLOR_MODE_NATURAL   -->
+        <item>1</item> <!-- COLOR_MODE_BOOSTED   -->
+        <item>2</item> <!-- COLOR_MODE_SATURATED -->
+        <item>3</item> <!-- COLOR_MODE_AUTOMATIC -->
+    </integer-array>
+    <integer-array name="config_displayCompositionColorSpaces">
+        <item>0</item> <!-- COLOR_MODE_DEFAULT    -->
+        <item>0</item> <!-- COLOR_MODE_DEFAULT    -->
+        <item>0</item> <!-- COLOR_MODE_DEFAULT    -->
+        <item>9</item> <!-- COLOR_MODE_DISPLAY_P3 -->
+    </integer-array>
+
     <!-- Vibrator pattern for feedback about a long screen/key press -->
     <integer-array name="config_longPressVibePattern">
         <item>0</item>
@@ -16,30 +53,27 @@
         <item>67</item>
     </integer-array>
 
-    <!-- Vibrator pattern for feedback about booting with safe mode enabled -->
-    <integer-array name="config_safeModeEnabledVibePattern">
-        <item>0</item>
-        <item>0</item>
-        <item>94</item>
-    </integer-array>
-
-    <!-- Fast brightness animation ramp rate in brightness units per second-->
-    <integer translatable="false" name="config_brightness_ramp_rate_fast">180</integer>
-
-    <!-- Slow brightness animation ramp rate in brightness units per second-->
-    <integer translatable="false" name="config_brightness_ramp_rate_slow">60</integer>
-
-    <!-- Maximum screen brightness allowed by the power manager.
-          The user is forbidden from setting the brightness above this level. -->
-    <item name="config_screenBrightnessSettingMaximumFloat" format="float" type="dimen">1.0</item>
-
     <!-- Minimum screen brightness setting allowed by power manager.
-         The user is forbidden from setting the brightness below this level.  -->
+         -2 is invalid so setting will resort to int value specified above.
+         Set this to 0.0 to allow screen to go to minimal brightness.
+         The user is forbidden from setting the brightness below this level. -->
     <item name="config_screenBrightnessSettingMinimumFloat" format="float" type="dimen">0.0039072</item>
 
-    <!-- Default screen brightness setting
+    <!-- Maximum screen brightness allowed by the power manager.
+         -2 is invalid so setting will resort to int value specified above.
+         Set this to 1.0 for maximum brightness range.
+         The user is forbidden from setting the brightness above this level. -->
+    <item name="config_screenBrightnessSettingMaximumFloat" format="float" type="dimen">1.0</item>
+
+    <!-- Default screen brightness setting set.
+         -2 is invalid so setting will resort to int value specified above.
          Must be in the range specified by minimum and maximum. -->
     <item name="config_screenBrightnessSettingDefaultFloat" format="float" type="dimen">0.186813</item>
+
+    <!-- Screen brightness used to dim the screen while dozing in a very low power state.
+         May be less than the minimum allowed brightness setting
+         that can be set by the user. -->
+    <item name="config_screenBrightnessDozeFloat" format="float" type="dimen">0.1351427</item>
 
     <!-- Stability requirements in milliseconds for accepting a new brightness level.  This is used
          for debouncing the light sensor.  Different constants are used to debounce the light sensor
@@ -49,26 +83,14 @@
     <integer name="config_autoBrightnessBrighteningLightDebounce">1000</integer>
     <integer name="config_autoBrightnessDarkeningLightDebounce">4000</integer>
 
+    <!-- The maximum range of gamma adjustment possible using the screen
+         auto-brightness adjustment setting. -->
+    <fraction name="config_autoBrightnessAdjustmentMaxGamma">100%</fraction>
+
     <!-- Screen brightness used to dim the screen when the user activity
          timeout expires.  May be less than the minimum allowed brightness setting
          that can be set by the user. -->
     <item name="config_screenBrightnessDimFloat" format="float" type="dimen">0.0021978</item>
-
-      <!-- Screen brightness used to dim the screen while dozing in a very low power state.
-         May be less than the minimum allowed brightness setting
-         that can be set by the user. -->
-    <item name="config_screenBrightnessDozeFloat" format="float" type="dimen">0.1351427</item>
-
-    <!-- The maximum range of gamma adjustment possible using the screen
-          auto-brightness adjustment setting. -->
-    <fraction name="config_autoBrightnessAdjustmentMaxGamma">100%</fraction>
-
-     <!-- Default screen brightness for VR setting. Target default value: 0x0BB for EVT1.1. -->
-    <!-- 8 bit brightness level of 6 corresponds to the 10 bit brightness level of 0x0B6,
-         8 bit brightness level of 7 corresponds to the 10 bit brightness level of 0x0C1 on EVT1.1. -->
-    <integer name="config_screenBrightnessForVrSettingDefault">7</integer>
-    <integer name="config_screenBrightnessForVrSettingMinimum">6</integer>
-    <integer name="config_screenBrightnessForVrSettingMaximum">7</integer>
 
     <!-- Array of light sensor lux values to define our levels for auto backlight brightness support.
          The N entries of this array define N + 1 control points as follows:
@@ -282,45 +304,19 @@
         <item>283</item>
     </integer-array>
 
-    <!-- The display uses different gamma curves for different refresh rates. It's hard for panel
-          vendor to tune the curves to have exact same brightness for different refresh rate. So
-          flicker could be observed at switch time. The issue is worse at the gamma lower end.
-          In addition, human eyes are more sensitive to the flicker at darker environment.
-          To prevent flicker, we only support higher refresh rates if the display brightness is above
-          a threshold. And the darker environment could have higher threshold.
-          For example, no higher refresh rate if
-              display brightness <= disp0 && ambient brightness <= amb0
-              || display brightness <= disp1 && ambient brightness <= amb1 -->
-    <integer-array name="config_brightnessThresholdsOfPeakRefreshRate">
-        <item>10</item> <!-- 33% UI brightness -->
-        <item>14</item> <!-- 40% UI brightness -->
-    </integer-array>
-    <integer-array name="config_ambientThresholdsOfPeakRefreshRate">
-        <item>-1</item>
-        <item>20</item>
-    </integer-array>
-
-    <!-- Default refresh rate in the zone defined by brightness and ambient thresholds.
-          If non-positive, then the refresh rate is unchanged even if thresholds are configured. -->
-    <integer name="config_defaultRefreshRateInZone">90</integer>
-
-     <!-- The default refresh rate -->
-    <integer name="config_defaultRefreshRate">0</integer>
-
-    <!-- Whether or not Wide Colour Gamut (wcg) mode should be enabled on this device -->
-    <bool name="config_enableWcgMode">true</bool>
-
-    <!-- MMS user agent string -->
+    <!-- MMS user agent string, for example OemNameDeviceName
+         If the string contains a '%s' format string then that substring will be replaced
+         with the value of Build.MODEL , ie
+         <string name="config_mms_user_agent">OemName%s</string> -->
     <string name="config_mms_user_agent" translatable="false">motorolaedge30fusion</string>
 
-    <!-- MMS user agent prolfile url -->
+    <!-- MMS user agent prolfile url, for example https://uaprof.oem_name.com/DeviceName.xml
+         if the string contains a '%s' format string then that substring will be replaced
+         with the value of Build.MODEL , ie https://uaprof.oem_name.com/%s.xml -->
     <string name="config_mms_user_agent_profile_url" translatable="false">http://uaprof.motorola.com/phoneconfig/motov1/Profile/motov1.rdf</string>
 
     <!-- Type of the double tap sensor. Empty if double tap is not supported. -->
     <string name="config_dozeDoubleTapSensorType" translatable="false">org.lineageos.sensor.double_tap</string>
-
-    <!-- Whether to enable fp unlock when screen turns off on udfps devices -->
-    <bool name="config_screen_off_udfps_enabled">true</bool>
 
     <!-- Type of the udfps long press sensor. Empty if long press is not supported. -->
     <string name="config_dozeUdfpsLongPressSensorType" translatable="false">org.lineageos.sensor.udfps</string>
@@ -333,6 +329,25 @@
     <!-- Control whether the always on display mode is enabled by default. This value will be used
          during initialization when the setting is still null. -->
     <bool name="config_dozeAlwaysOnEnabled">false</bool>
+
+    <!-- If true, the display will be shifted around in ambient mode. -->
+    <bool name="config_enableBurnInProtection">true</bool>
+
+    <!-- Specifies the maximum burn-in offset displacement from the center. If -1, no maximum value
+         will be used. -->
+    <integer name="config_burnInProtectionMaxRadius">70</integer>
+
+    <!-- Specifies the minimum burn-in offset horizontally. -->
+    <integer name="config_burnInProtectionMinHorizontalOffset">-15</integer>
+
+    <!-- Specifies the maximum burn-in offset horizontally. -->
+    <integer name="config_burnInProtectionMaxHorizontalOffset">15</integer>
+
+    <!-- Specifies the minimum burn-in offset vertically. -->
+    <integer name="config_burnInProtectionMinVerticalOffset">-40</integer>
+
+    <!-- Specifies the maximum burn-in offset vertically. -->
+    <integer name="config_burnInProtectionMaxVerticalOffset">40</integer>
 
     <!-- The bounding path of the cutout region of the main built-in display.
          Must either be empty if there is no cutout region, or a string that is parsable by
@@ -358,13 +373,45 @@
 
          @see https://www.w3.org/TR/SVG/paths.html#PathData
          -->
-    <string name="config_mainBuiltInDisplayCutout" translatable="false">
-        M -31,0
-        L -31,95
-        L 31,95
-        L 31,0
-        Z
-    </string>
+    <string name="config_mainBuiltInDisplayCutout" translatable="false">M -31,0 L -31,95 L 31,95 L 31,0 Z</string>
+
+    <!-- The default refresh rate for a given device. Change this value to set a higher default
+         refresh rate. If the hardware composer on the device supports display modes with a higher
+         refresh rate than the default value specified here, the framework may use those higher
+         refresh rate modes if an app chooses one by setting preferredDisplayModeId or calling
+         setFrameRate().
+         If a non-zero value is set for config_defaultPeakRefreshRate, then
+         config_defaultRefreshRate may be set to 0, in which case the value set for
+         config_defaultPeakRefreshRate will act as the default frame rate. -->
+    <integer name="config_defaultRefreshRate">0</integer>
+
+    <!-- The display uses different gamma curves for different refresh rates. It's hard for panel
+         vendors to tune the curves to have exact same brightness for different refresh rate. So
+         flicker could be observed at switch time. The issue is worse at the gamma lower end.
+         In addition, human eyes are more sensitive to the flicker at darker environment.
+         To prevent flicker, we only support higher refresh rates if the display brightness is above
+         a threshold.
+         For example, no higher refresh rate if
+             display brightness <= disp0 && ambient brightness <= amb0
+             || display brightness <= disp1 && ambient brightness <= amb1
+         Brightness thresholds are paired with lux thresholds - they both have to be met.
+         A negative brightness or lux value means that only one threshold should be used - e.g. if
+         the brightness value is negative, only the lux threshold is applied. -->
+    <!-- Low zone brightness thresholds in the range [0, 255] -->
+    <integer-array name="config_brightnessThresholdsOfPeakRefreshRate">
+        <item>10</item> <!-- 33% UI brightness -->
+        <item>14</item> <!-- 40% UI brightness -->
+    </integer-array>
+
+    <!-- Low zone lux thresholds -->
+    <integer-array name="config_ambientThresholdsOfPeakRefreshRate">
+        <item>-1</item>
+        <item>20</item>
+    </integer-array>
+
+    <!-- Default refresh rate in the zone defined by brightness and ambient thresholds.
+         If non-positive, then the refresh rate is unchanged even if thresholds are configured. -->
+    <integer name="config_defaultRefreshRateInZone">90</integer>
 
     <!-- List of biometric sensors on the device, in decreasing strength. Consumed by AuthService
          when registering authenticators with BiometricService. Format must be ID:Modality:Strength,
@@ -375,65 +422,16 @@
     </string-array>
 
     <!-- The properties of a UDFPS sensor in pixels, in the order listed below: -->
-    <integer-array name="config_udfps_sensor_props" translatable="false">
+    <integer-array name="config_udfps_sensor_props">
         <item>540</item> <!-- sensorLocationX -->
         <item>2164</item> <!-- sensorLocationY -->
         <item>91</item> <!-- sensorRadius -->
     </integer-array>
 
-    <!-- Indicate available ColorDisplayManager.COLOR_MODE_xxx. -->
-    <array name="config_availableColorModes">
-        <item>0</item> <!-- COLOR_MODE_NATURAL -->     <!-- This uses colorimetric render intents-->
-        <item>1</item> <!-- COLOR_MODE_BOOSTED -->     <!-- This applies a 10% boost using the PCC-->
-        <item>2</item> <!-- COLOR_MODE_SATURATED -->
-        <item>3</item> <!-- COLOR_MODE_AUTOMATIC -->   <!-- This uses enhanced render intents-->
-    </array>
+    <!-- Whether or not wcg (wide color gamut) should be enabled on this device,
+         we only enabled it while the device has ability of mixed color spaces composition -->
+    <bool name="config_enableWcgMode">true</bool>
 
-    <!-- Color mode to use when accessibility transforms are enabled. This color mode must be
-         supported by the device, but not necessarily appear in config_availableColorModes. The
-         regularly selected color mode will be used if this value is negative. -->
-    <integer name="config_accessibilityColorMode">2</integer>
-
-    <!-- The following two arrays specify which color space to use for display composition when a
-         certain color mode is active.
-         Composition color spaces are defined in android.view.Display.COLOR_MODE_xxx, and color
-         modes are defined in ColorDisplayManager.COLOR_MODE_xxx and
-         ColorDisplayManager.VENDOR_COLOR_MODE_xxx.
-         The color space COLOR_MODE_DEFAULT (0) lets the system select the most appropriate
-         composition color space for currently displayed content. Other values (e.g.,
-         COLOR_MODE_SRGB) override system selection; these other color spaces must be supported by
-         the device for for display composition.
-         If a color mode does not have a corresponding color space specified in this array, the
-         currently set composition color space will not be modified.-->
-    <integer-array name="config_displayCompositionColorModes">
-        <item>0</item> <!-- COLOR_MODE_NATURAL   -->
-        <item>1</item> <!-- COLOR_MODE_BOOSTED   -->
-        <item>2</item> <!-- COLOR_MODE_SATURATED -->
-        <item>3</item> <!-- COLOR_MODE_AUTOMATIC -->
-    </integer-array>
-    <integer-array name="config_displayCompositionColorSpaces">
-        <item>0</item> <!-- COLOR_MODE_DEFAULT    -->
-        <item>0</item> <!-- COLOR_MODE_DEFAULT    -->
-        <item>0</item> <!-- COLOR_MODE_DEFAULT    -->
-        <item>9</item> <!-- COLOR_MODE_DISPLAY_P3 -->
-    </integer-array>
-
-   <!-- If true, the display will be shifted around in ambient mode. -->
-    <bool name="config_enableBurnInProtection">true</bool>
-
-    <!-- Specifies the maximum burn-in offset displacement from the center. If -1, no maximum value
-         will be used. -->
-    <integer name="config_burnInProtectionMaxRadius">70</integer>
-
-    <!-- Specifies the minimum burn-in offset horizontally. -->
-    <integer name="config_burnInProtectionMinHorizontalOffset">-15</integer>
-
-    <!-- Specifies the maximum burn-in offset horizontally. -->
-    <integer name="config_burnInProtectionMaxHorizontalOffset">15</integer>
-
-    <!-- Specifies the minimum burn-in offset vertically. -->
-    <integer name="config_burnInProtectionMinVerticalOffset">-40</integer>
-
-    <!-- Specifies the maximum burn-in offset vertically. -->
-    <integer name="config_burnInProtectionMaxVerticalOffset">40</integer>
+    <!-- Whether to enable fp unlock when screen turns off on udfps devices -->
+    <bool name="config_screen_off_udfps_enabled">true</bool>
 </resources>

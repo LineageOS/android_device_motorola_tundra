@@ -19,11 +19,8 @@
     <dimen name="status_bar_height_landscape">28dp</dimen>
 
     <!-- Default radius of the software rounded corners. -->
-    <dimen name="rounded_corner_radius">85.0px</dimen>
+    <dimen name="rounded_corner_radius">85px</dimen>
 
     <!-- Default paddings for content around the corners. -->
     <dimen name="rounded_corner_content_padding">4px</dimen>
-
-    <!-- Reduce blur radius to avoid blur artifacts -->
-    <dimen name="max_shade_window_blur_radius">12dp</dimen>
 </resources>
