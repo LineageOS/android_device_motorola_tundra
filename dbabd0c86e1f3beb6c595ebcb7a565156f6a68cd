@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19efc7b0_ed7d54dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 19252
+      },
+      "writtenOn": "2026-08-22T01:42:40Z",
+      "side": 1,
+      "message": "I asked tundra community on Telegram to test a build I made and they confirmed that this, with the kernel commits that HTPR off is 250Hz and on is 360Hz",
+      "revId": "dbabd0c86e1f3beb6c595ebcb7a565156f6a68cd",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}
