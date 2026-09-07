@@ -95,5 +95,12 @@ PRODUCT_PACKAGES += \
 
 $(call soong_config_set, MOTOROLA_TOUCH, HIGH_TOUCH_POLLING_PATH, /sys/class/touchscreen/primary/interpolation)
 
+# VINTF
+ODM_MANIFEST_SKUS += e n
+ODM_MANIFEST_E_FILES := \
+    device/motorola/sm7325-common/vintf/manifest_ss.xml
+ODM_MANIFEST_N_FILES := \
+    device/motorola/sm7325-common/vintf/manifest_ss.xml
+
 # Inherit from vendor blobs
 $(call inherit-product, vendor/motorola/tundra/tundra-vendor.mk)
